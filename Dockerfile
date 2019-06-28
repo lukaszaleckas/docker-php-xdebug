@@ -1,4 +1,4 @@
-FROM php:7.1-fpm
+FROM php:7.3-fpm
 
 RUN apt-get update && apt-get install -y && apt-get install -y vim nano libc-client-dev libkrb5-dev && rm -r /var/lib/apt/lists/*
 RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
