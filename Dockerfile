@@ -13,7 +13,7 @@ RUN curl https://phar.phpunit.de/phpunit-5.7.phar -L -o phpunit.phar \
 RUN apt-get update && apt-get install -y zlib1g-dev libicu-dev g++
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-install pdo pdo_mysql mbstring bcmath mcrypt sockets calendar intl
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN pecl install xdebug-2.5.5 && docker-php-ext-enable xdebug
 
 # https://serversforhackers.com/c/getting-xdebug-working
 # for macs remote_host must be host machine private ip
