@@ -4,20 +4,22 @@ RUN apt-get update && apt-get install -y && apt-get install -y vim nano libc-cli
 RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
 && docker-php-ext-install imap
 RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install opcache
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 
-# https://serversforhackers.com/c/getting-xdebug-working
-# for macs remote_host must be host machine private ip
-# use ipconfig getifaddr en1
-# use ipconfig getifaddr en0
+ENV PHP_XDEBUG_REMOTE_AUTOSTART="1"
+ENV PHP_XDEBUG_REMOTE_ENABLE="1"
+ENV PHP_XDEBUG_PROFILER_ENABLE="1"
+ENV PHP_XDEBUG_REMOTE_HANDLER="dbgp"
+ENV PHP_XDEBUG_REMOTE_HOST="host.docker.internal"
+ENV PHP_XDEBUG_REMOTE_PORT="9100"
+ENV PHP_XDEBUG_REMOTE_CONNECT_BACK="0"
+ENV PHP_XDEBUG_IDE_KEY="phpstorm"
 
-RUN echo "xdebug.remote_autostart=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.profiler_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.remote_handler=dbgp" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.remote_port=9100" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.remote_connect_back=0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.idekey=phpstorm" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+ADD xdebug.ini "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 ENV PHP_IDE_CONFIG="serverName=xdebug-server"
+
+ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="1"
+ENV PHP_OPCACHE_ENABLE="1"
+ADD opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
