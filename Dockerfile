@@ -1,8 +1,6 @@
 FROM php:7.4-fpm
 
-RUN apt-get update && apt-get install -y && apt-get install -y vim nano libc-client-dev libkrb5-dev && rm -r /var/lib/apt/lists/*
-RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
-&& docker-php-ext-install imap
+RUN apt-get update && apt-get install -y && rm -r /var/lib/apt/lists/*
 RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-install opcache
 RUN pecl install xdebug && docker-php-ext-enable xdebug
